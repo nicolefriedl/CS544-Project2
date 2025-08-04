@@ -1,0 +1,13 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY PropertyLookup.proto /app/
+COPY cache.py /app/
+
+RUN apt-get update && apt-get install -y git
+RUN pip install grpcio grpcio-tools pandas
+RUN pip install grpcio grpcio-tools flask
+RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. PropertyLookup.proto
+
+CMD ["python", "cache.py"]
